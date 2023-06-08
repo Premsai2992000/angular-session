@@ -1,0 +1,28 @@
+@use "../../../../assets/content/variables.scss" as variables;
+@import "../../../../assets/content/bootstrap.scss";
+
+.center {
+    margin: auto;
+    margin-top: variables.$Margin-top;
+    border: 3px solid variables.$PrimaryColor-bg;
+    width: 500px;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  }
+
+.boomi-login-header{
+    width: 400px;
+}
+
+.login-screen-input-group{
+    display: flex;
+    flex-direction: column;
+}
+
+.login-input-field{
+    height:40px;
+    margin-top: 5%
+}
+
+
+

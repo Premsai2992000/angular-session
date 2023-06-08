@@ -1,0 +1,13 @@
+/* You can add global styles to this file, and also import other style files */
+@use "./assets/content/variables.scss" as variables;
+@import '~primeng/resources/primeng.min.css';
+@import '~primeng/resources/themes/saga-blue/theme.css';
+@import '~primeicons/primeicons.css';
+@import '~primeflex/primeflex.css';
+
+body {
+    background-image: url("./assets/images/border-from-blue-paint.jpg");
+    background-repeat: no-repeat;
+    background-attachment: fixed;  
+    background-size: cover;
+  }

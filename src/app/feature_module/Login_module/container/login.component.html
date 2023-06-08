@@ -1,0 +1,26 @@
+<form class="login-form" [formGroup]="loginForm">
+    <div class="card flex justify-content-center center">
+      <p-card class="boomi-login-header" header="Boomi Integration">
+        <ng-template pTemplate="header">
+            <img alt="Card" src="../../../assets/images/social-media-icon.png" />
+        </ng-template>
+
+        <div class="login-screen-input-group">
+            <div class="p-input-icon-right">
+                
+                <input #email autofocus pInputText autocomplete="off" class="p-inputtext-lg login-input-field" formControlName="email"
+                    placeholder="Enter email address" type="text">
+            </div>
+            <div class="p-input-icon-right">
+                
+                <input #password autofocus pInputText autocomplete="off" class="p-inputtext-lg login-input-field"
+                    formControlName="password" placeholder="Enter password" type="password">
+            </div>
+        </div>
+
+        <ng-template pTemplate="footer">
+            <p-button (click)="loginFormSubmit()" label="Login"></p-button>
+        </ng-template>
+      </p-card>
+    </div>
+</form>
