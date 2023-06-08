@@ -9,11 +9,37 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+variables:
+- name: 'appType'
+  value: 'webApp'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSource: 'spec'
+    versionSpec: '16.14.0'
+
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    customCommand: 'install --force'
+
+- task: AngularCLI@1
+  inputs:
+    command: 'build'
+    prod: false
+    DisableAnalytics: false
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/dist'
+    Contents: '**'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: '$(AZURE_SVC)'
+    appType: $(appType)
+    WebAppName: 'demo-angular-session-yaml'
+    packageForLinux: '$(Build.ArtifactStagingDirectory)'
