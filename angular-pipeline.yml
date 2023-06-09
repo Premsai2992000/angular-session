@@ -29,7 +29,7 @@ steps:
   
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/dist'
+    SourceFolder: '$(Build.SourcesDirectory)/dist/lll'
     Contents: '**'
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
   
