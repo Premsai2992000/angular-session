@@ -36,7 +36,7 @@ steps:
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'premsai-sample-svc'
-    appType: 'webApp'
+    azureSubscription: '$(AZURE_SVC)'
+    appType: '$(AZURE_APP_TYPE)'
     WebAppName: 'demo-angular-yaml-pipeline'
     packageForLinux: '$(Build.ArtifactStagingDirectory)'
