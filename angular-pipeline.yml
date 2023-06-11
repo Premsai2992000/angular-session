@@ -9,34 +9,60 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSource: 'spec'
-    versionSpec: '16.14.0'
-  
-- task: Npm@1
-  displayName: angular package install
-  inputs:
-    command: 'custom'
-    customCommand: 'install --force'
+stages: 
+- stage: Build
+  displayName: Build an angular application
+  jobs:
+    - job: Build
+      steps:
+      - task: NodeTool@0
+        inputs:
+          versionSource: 'spec'
+          versionSpec: '16.14.0'
+        
+      - task: Npm@1
+        displayName: angular package install
+        inputs:
+          command: 'custom'
+          customCommand: 'install --force'
 
-- task: AngularCLI@1
-  inputs:
-    command: 'build'
-    prod: false
-    DisableAnalytics: false
+      - task: AngularCLI@1
+        inputs:
+          command: 'build'
+          prod: false
+          DisableAnalytics: false
+        
+      - task: CopyFiles@2
+        inputs:
+          SourceFolder: '$(Build.SourcesDirectory)/dist'
+          Contents: '**'
+          TargetFolder: '$(Build.ArtifactStagingDirectory)'
+          
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)'
+          artifact: 'drop'
+          publishLocation: 'pipeline'
   
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/dist'
-    Contents: '**'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-  
-- task: AzureRmWebAppDeployment@4
-  inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: '$(AZURE_SVC)'
-    appType: '$(AZURE_APP_TYPE)'
-    WebAppName: 'demo-angular-yaml-pipeline'
-    packageForLinux: '$(Build.ArtifactStagingDirectory)'
+- stage: Deploy
+  displayName: Deploy
+  jobs:
+  - deployment: Deploy
+    environment: deploy
+    strategy: 
+     runOnce:
+       deploy:
+         steps:
+          - task: DownloadPipelineArtifact@2
+            inputs:
+             buildType: 'current'
+             artifactName: 'drop'
+             targetPath: '$(Pipeline.Workspace)/artifact'
+
+          - task: AzureRmWebAppDeployment@4
+            inputs:
+               ConnectionType: 'AzureRM'
+               azureSubscription: '$(AZURE_SVC)'
+               appType: 'webApp'
+               WebAppName: 'demo-angular-yaml-pipeline'
+               packageForLinux: '$(Pipeline.Workspace)/artifact'
